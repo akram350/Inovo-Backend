@@ -27,7 +27,7 @@ WishLists:{
 },
 isAdmin:{
     type:String,
-    required: true,
+    required: false,
 },
 hasShippingAddress:{
     type:Boolean,
