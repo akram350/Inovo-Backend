@@ -1,6 +1,10 @@
 import User from "../model/user.js";
 import bcrypt from 'bcryptjs';
 import asyncHandler from "express-async-handler";
+import generateToken from "../utils/generateToken.js";
+import { getTokenFromHeader } from "../utils/getTokenFromHeader.js";
+import { get } from "mongoose";
+import { verifyToken } from "../utils/verifyToken.js";
 export const registerUserController =  asyncHandler(async (req,res) =>{
     const {fullName, Email, Password} = req.body 
     // checking if user alrdy exist 
@@ -32,9 +36,23 @@ if(UserFound && await bcrypt.compare(Password,UserFound?.Password)){
        status:" success",
        msg:"user logged in successfully ",
        UserFound,
+       Token: generateToken(UserFound?._id)
     })
 } 
 else {
 throw new Error( "invalide login details")
 }
 })
+export const getUserProfile = asyncHandler(async (req,res) =>{
+    const token  = getTokenFromHeader(req)
+    // verifying token 
+    const verified = verifyToken(token)
+    console.log(verified)
+    
+    res.json({
+        msg:"welcome to profile page "
+    })
+})
+    
+
+ 
